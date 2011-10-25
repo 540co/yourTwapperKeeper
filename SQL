@@ -1,0 +1,76 @@
+SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `archives`
+--
+
+CREATE TABLE IF NOT EXISTS `archives` (
+  `id` bigint(20) NOT NULL auto_increment,
+  `keyword` varchar(30) NOT NULL,
+  `description` varchar(250) NOT NULL,
+  `tags` varchar(250) NOT NULL,
+  `screen_name` varchar(50) NOT NULL,
+  `user_id` varchar(50) NOT NULL,
+  `count` bigint(20) NOT NULL,
+  `create_time` int(11) NOT NULL,
+  PRIMARY KEY  (`id`),
+  KEY `keyword` (`keyword`),
+  KEY `description` (`description`),
+  KEY `tags` (`tags`),
+  KEY `screen_name` (`screen_name`),
+  KEY `create_time` (`create_time`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+
+-- --------------------------------------------------------
+--
+-- Table structure for table `processes`
+--
+
+CREATE TABLE IF NOT EXISTS `processes` (
+  `process` varchar(50) NOT NULL,
+  `pid` int(11) NOT NULL,
+  `last_ping` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `processes`
+--
+
+INSERT INTO `processes` (`process`, `pid`, `last_ping`) VALUES
+('yourtwapperkeeper_crawl.php', 0, 0),
+('yourtwapperkeeper_stream.php', 0, 0),
+('yourtwapperkeeper_stream_process.php', 0, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rawstream`
+--
+
+CREATE TABLE IF NOT EXISTS `rawstream` (
+  `flag` varchar(20) NOT NULL,
+  `text` varchar(300) NOT NULL,
+  `to_user_id` varchar(100) NOT NULL,
+  `from_user` varchar(100) NOT NULL,
+  `id` varchar(100) NOT NULL,
+  `from_user_id` varchar(100) NOT NULL,
+  `iso_language_code` varchar(10) NOT NULL,
+  `source` varchar(250) NOT NULL,
+  `profile_image_url` varchar(250) NOT NULL,
+  `geo_type` varchar(30) NOT NULL,
+  `geo_coordinates_0` double NOT NULL,
+  `geo_coordinates_1` double NOT NULL,
+  `created_at` varchar(50) NOT NULL,
+  `time` int(11) NOT NULL,
+  KEY `from_user` (`from_user`),
+  KEY `iso_language_code` (`iso_language_code`),
+  KEY `geo_type` (`geo_type`),
+  KEY `id` (`id`),
+  KEY `time` (`time`),
+  KEY `flag` (`flag`),
+  FULLTEXT KEY `full` (`text`),
+  FULLTEXT KEY `text` (`text`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+

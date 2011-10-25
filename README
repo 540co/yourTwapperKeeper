@@ -1,0 +1,78 @@
+-----------------------------
+WHAT IS yourTWAPPERKEEPER
+
+yourTwapperKeeper is an open version of TwapperKeeper.com designed to be hosted by you!
+
+-----------------------------
+
+FEATURES
+
+- Simple, easy way to archive data from Twitter directly on your server
+- Output to HTML, RSS, EXCEL, and JSON
+- Archives from both Twitter Streaming API and Search API (for reachback and any missed tweets)
+
+-----------------------------
+
+WHAT YOU NEED
+
+A dedicated virtual server with a dedicated IP address running APACHE / PHP / MYSQL (tested with APACHE 2.2.15 / PHP 5.3.3 / MYSQL 5.0.77 on CENTOS 5.5). (Shared servers could cause issues with blacklisting and are not recommended!  For your reference, we tested on RackspaceCloud servers - http://rackspacecloud.com)
+
+-----------------------------
+
+HOW TO INSTALL
+
+1. Extract .tar.gz file into your apache server folder (i.e. /var/www.html/)
+
+2. Create a MYSQL database and import the tables / data from file SQL. 
+
+3. Login to Twitter with the account you want to use for archiving, and [Register a new application] - http://dev.twitter.com/apps/new
+	
+	- Application Name = Change to your liking
+	- Description = Change to your liking
+	- Application Website = Your URL where the site will be hosted (i.e. http://yourtwapperkeeperexample.com/)
+	- Organization = Change to your liking
+	- Application Type = Browser
+	- Callback URL = Your_URL/callback.php (i.e. http://yourtwapperkeeperexample.com/callback.php)
+	- Default Access Type = Read & Write
+	- Application Icon = Change or leave default
+	
+4. After application is successfully created, write down:
+	- Consumer Key
+	- Consumer Secret
+	
+5. Select "My Access Token" on right hand side.  Write down: 
+	- Access Token (oauth_token)
+	- Access Token Secret (oauth_token_secret)
+
+6. Now time to edit the config.php file on your server.  Make sure to change the following:
+	/* Host Information */
+		Change the host information based upon your host.
+		
+	/* Administrators - Twitter screen name(s) who can administer / start / stop archiving */
+	 	Users in this list are allowed to start / stop the archiving processes on the server.  Must be at least one.  Recommend using the same twitter account used to create application.
+	 	
+	/* Users - Twitter screen names that are allowed to use Your Twapper Keeper site - leaving commented means anyone can use site*/
+		Users in this list are allowed to create archives and edit / delete archives they own.  Leaving blank means anyone can create archives and edit / delete ones they own.
+	
+	/* Your Twapper Keeper Twitter Account Information used to query for tweets (this is common for the site) */	
+		This should be the account information for the user who created the Twitter application.  Also, use the oauth information captured in step 5.
+	
+	/* Your Twapper Keeper Application Information - setup at http://dev.twitter.com/apps and copy in consumer key and secret */
+		Update with the information captured in step 4.
+		
+	/* MySQL Database Connection Information */  
+		Update with your DB information
+	
+7. After this is all done - start apache / mysql and start archiving!
+
+-----------------------------
+
+CREDITS
+
+Your TwapperKeeper leverages both TwitterOAuth (http://github.com/abraham/twitteroauth) and phirehose (http://code.google.com/p/phirehose/).  Special thanks to those guys for creating such AWESOME libraries! 
+
+
+
+
+
+
