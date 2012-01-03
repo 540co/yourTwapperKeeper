@@ -21,7 +21,7 @@ A dedicated virtual server with a dedicated IP address running APACHE / PHP / MY
 
 HOW TO INSTALL
 
-1. Extract .tar.gz file into your apache server folder (i.e. /var/www.html/)
+1. Extract .tar.gz file into your apache server folder (i.e. /var/www/html/)
 
 2. Create a MYSQL database and import the tables / data from file SQL. 
 
