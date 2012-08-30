@@ -17,6 +17,9 @@ WHAT YOU NEED
 
 A dedicated virtual server with a dedicated IP address running APACHE / PHP / MYSQL (tested with APACHE 2.2.15 / PHP 5.3.3 / MYSQL 5.0.77 on CENTOS 5.5). (Shared servers could cause issues with blacklisting and are not recommended!  For your reference, we tested on RackspaceCloud servers - http://rackspacecloud.com)
 
+Here is a step-by-step guide to install on Rackspace Cloud: 
+http://jobrieniii.tumblr.com/post/15240403050/how-to-install-yourtwapperkeeper-on-a-rackspace-cloud
+
 -----------------------------
 
 HOW TO INSTALL
