@@ -50,7 +50,7 @@ define("DB_PASS", "TBD");												// change to your db password
 define("DB_NAME", "yourdbname"); 										// change to your db name
 
 /* Don't mess with this unless you want to get your hands dirty */
-$yourtwapperkeeper_version = "version 0.5.6";
+$yourtwapperkeeper_version = "version 0.6.0";
 $archive_process_array = array('yourtwapperkeeper_crawl.php','yourtwapperkeeper_stream.php','yourtwapperkeeper_stream_process.php');
 $twitter_api_sleep_min = 11;
 $stream_process_stack_size = 500;

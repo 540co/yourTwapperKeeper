@@ -2,7 +2,7 @@
 // load important files
 require_once('config.php');
 require_once('function.php');
-require_once('twitteroauth_search.php');
+require_once('twitteroauth.php');
 
 // setup values
 $pid = getmypid();
@@ -27,35 +27,66 @@ while (TRUE) {
 	 echo $row_archives['id']." - ".$row_archives['keyword']."\n";
 	  
 	 // Loop for 15 pages
+	 $max_id = NULL;
+	 
 	 for ($page_counter = 1; $page_counter <=15 ; $page_counter = $page_counter + 1) {
-	 		 	
-	 	$search = $connection->get('search.twitter.com/search', array('q' => $row_archives['keyword'], 'rpp' => 100, 'page' => $page_counter));
+	 	echo "****TIME AROUND = ".$page_counter."****\n";	 	
 	 	
+	 	if ($max_id == NULL) {
+		 	$search = $connection->get('search/tweets', array('q' => $row_archives['keyword'], 'count'=>100));
+		 	echo "NO - no max_id is not set\n";
+		 	
+	 	} else {
+		 	$search = $connection->get('search/tweets', array('q' => $row_archives['keyword'], 'count'=>100, 'max_id'=>$max_id));
+		 	echo "YES - max_id is set\n";
+	 	}
+
+
 	 	$searchresult = get_object_vars($search);
-	 	$count = count($searchresult['results']);
+	 	$count = count($searchresult['statuses']);
 	
 		// parse results
-		foreach ($searchresult['results'] as $key=>$value) {
+		foreach ($searchresult['statuses'] as $key=>$value) {
 			$value = get_object_vars($value);
         	    		
     		// extract data
-    		extract($value,EXTR_PREFIX_ALL,'temp');
+    		//extract($value,EXTR_PREFIX_ALL,'temp');
+    		$temp_text = $value['text'];
+    		$temp_to_user_id = $value['in_reply_to_user_id'];
+    		$temp_from_user = $value['user']->screen_name;
+    		$temp_id = $value['id_str'];
+    		$temp_from_user_id = $value['user']->id;
+    		$temp_iso_language_code = $value['metadata']->iso_language_code;
+    		$temp_source = $value['source'];
+    		$temp_profile_image_url = $value['user']->profile_background_image_url;
+    		$temp_created_at = $value['created_at'];
+    		
     		
         	// extract geo information
-        	$geo = get_object_vars($temp_geo);
-        	$geo_type = $geo['type'];
-        	$geo_coordinates_0 = $geo['coordinates'][0];
-        	$geo_coordinates_1 = $geo['coordinates'][1];
-    		
+        	if ($value['geo'] != NULL) {
+        		$geo = get_object_vars($value['geo']);
+        		$geo_type = $geo['type'];
+        		$geo_coordinates_0 = $geo['coordinates'][0];
+        		$geo_coordinates_1 = $geo['coordinates'][1];
+        	} else {
+	        	$geo_type = NULL;
+	        	$geo_coordinates_0 = 0;
+	        	$geo_coordinates_1 = 0;
+        	}
+        		
     		// duplicate record check and insert into proper cache table if not a duplicate
         	$q_check = "select id from z_".$row_archives['id']." where id = '".$value['id']."'";
         	$result_check = mysql_query($q_check, $db->connection);
         
         if (mysql_numrows($result_check)==0) {
         	$q = "insert into z_".$row_archives['id']." values ('twitter-search','".mysql_real_escape_string($temp_text)."','$temp_to_user_id','$temp_from_user','$temp_id','$temp_from_user_id','$temp_iso_language_code','$temp_source','$temp_profile_image_url','$geo_type','$geo_coordinates_0','$geo_coordinates_1','$temp_created_at','".strtotime($temp_created_at)."')";
+     
         	mysql_query($q, $db->connection);
-        	echo "[".$row['id']."-".$row['keyword']."] $page_counter - $temp_id - insert\n";
-        	} else {echo "$page_counter - $temp_id - duplicate\n";}
+        	echo "[".$row_archives['id']."-".$row_archives['keyword']."] $page_counter - $temp_id - insert\n";
+        	} else {
+        	echo "[".$row_archives['id']."-".$row_archives['keyword']."] $page_counter - $temp_id - duplicate\n";
+        	}
+        	$max_id = $temp_id; // resetting to lowest tweet id
         }
        
    	// If count for page is less than 100, break since there is no reason to keep going
@@ -63,19 +94,10 @@ while (TRUE) {
         break;
         }
     
+    echo "\nmaxid = $max_id.\n";
+    
     }
     
-    // adjust sleep if being rate limited
-   	$rate_check = $connection->get('api.twitter.com/1/account/rate_limit_status');
-   	echo "rate left = ".$rate_check->remaining_hits."\n";
-   	if ($rate_check->remaining_hits < 1) {
-   		$sleep = $sleep * 2;
-   	} else {
-   		if ($sleep > $twitter_api_sleep_min) {
-   		$sleep = $sleep / 2;
-   		}
-   	}
-
 	// update counts
 	$q_count_total = "select count(id) from z_".$row_archives['id'];
 	$r_count_total = mysql_query($q_count_total, $db->connection);  
@@ -88,6 +110,7 @@ while (TRUE) {
 	mysql_query("update processes set last_ping = '".time()."' where pid = '$pid'", $db->connection);
 	echo "update pid\n";
 	}
+	
 
 
 

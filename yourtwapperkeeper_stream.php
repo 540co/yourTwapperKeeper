@@ -1,10 +1,13 @@
 <?php
 require_once('Phirehose.php');
+require_once('OauthPhirehose.php');
 require_once('config.php');
 require_once('function.php');
 
+define('TWITTER_CONSUMER_KEY',$tk_oauth_consumer_key);
+define('TWITTER_CONSUMER_SECRET',$tk_oauth_consumer_secret);
 
-class DynamicTrackConsumer extends Phirehose
+class DynamicTrackConsumer extends OauthPhirehose
 { 
   
   public function enqueueStatus($status)
@@ -44,6 +47,8 @@ class DynamicTrackConsumer extends Phirehose
         
         $q = "insert into rawstream values($values)";    
         $result = mysql_query($q, $db->connection);
+        echo ".";
+       
     }
   }
  
@@ -70,5 +75,5 @@ class DynamicTrackConsumer extends Phirehose
 }
 
 // Start streaming
-$sc = new DynamicTrackConsumer($tk_twitter_username, $tk_twitter_password, Phirehose::METHOD_FILTER);
+$sc = new DynamicTrackConsumer($tk_oauth_token, $tk_oauth_token_secret, Phirehose::METHOD_FILTER);
 $sc->consume();
