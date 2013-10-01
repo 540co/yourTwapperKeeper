@@ -39,7 +39,7 @@ while (TRUE) {
         foreach ($preds as $ztable=>$keyword) {
         	if (stristr($tweet['text'],$keyword) == TRUE) {
         		echo " vs. $keyword = insert\n";
-        		$q_insert = "insert into z_$ztable values ('twitter-stream','".$tweet['text']."','".$tweet['to_user_id']."','".$tweet['from_user']."','".$tweet['id']."','".$tweet['from_user_id']."','".$tweet['iso_language_code']."','".$tweet['source']."','".$tweet['profile_image_url']."','".$tweet['geo_type']."','".$tweet['geo_coordinates_0']."','".$tweet['geo_coordinates_1']."','".$tweet['created_at']."','".$tweet['time']."')";
+        		$q_insert = "insert ignore into z_$ztable values ('twitter-stream','".$tweet['text']."','".$tweet['to_user_id']."','".$tweet['from_user']."','".$tweet['id']."','".$tweet['from_user_id']."','".$tweet['iso_language_code']."','".$tweet['source']."','".$tweet['profile_image_url']."','".$tweet['geo_type']."','".$tweet['geo_coordinates_0']."','".$tweet['geo_coordinates_1']."','".$tweet['created_at']."','".$tweet['time']."')";
         		$r_insert = mysql_query($q_insert, $db->connection);
         		} else {
         		echo " vs. $keyword = not found\n";
