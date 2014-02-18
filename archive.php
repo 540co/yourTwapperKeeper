@@ -38,6 +38,7 @@ $permrss = $tk_your_url."rss.php?".htmlentities($_SERVER['QUERY_STRING']);
 $permexcel = $tk_your_url."excel.php?".htmlentities($_SERVER['QUERY_STRING']);
 $permtable = $tk_your_url."table.php?".htmlentities($_SERVER['QUERY_STRING']);
 $permjson = $tk_your_url."apiGetTweets.php?".htmlentities($_SERVER['QUERY_STRING']);
+$permcsvpipe = $tk_your_url."csv_pipe_delimiter.php?".htmlentities($_SERVER['QUERY_STRING']);
 
 // set default limit
 if ($_GET['l'] == '') {$limit = 10;} else {$limit = $_GET['l'];}
@@ -469,7 +470,8 @@ echo "HTML Permalink = <a href='$permurl'>$permurl</a><br>";
 echo "RSS Permalink = <a href='$permrss'>$permrss</a><br>";
 echo "Excel Permalink = <a href='$permexcel'>$permexcel</a><br>";
 echo "Simple Table Permalink = <a href='$permtable'>$permtable</a><br>";
-echo "JSON API = <a href='$permjson'>$permjson</a>";
+echo "JSON API = <a href='$permjson'>$permjson</a><br>";
+echo "CSV PIPE DELIMITER = <a href='$permcsvpipe'>$permcsvpipe</a>";
 echo "</h5>";
 ?>
 </center>
