@@ -308,8 +308,14 @@ $languageCodes = array(
 
 ?>
 
+<style>
+    .form_query {
+        padding: 30px 0;
+        border-bottom: 1px solid #333;
+    }
+</style>
 
-<div class="form_download" style="padding: 50px 0;">
+<div class="form_query download">
     <h3>Download CSV with custom query</h3>
     <form method='get' action='csv_pipe_delimiter.php'>
         <input type='hidden' name='id' value='<?php echo $id; ?>'>
@@ -469,7 +475,7 @@ $languageCodes = array(
 
 
 
-<div class="form_view" style="padding: 50px 0;">
+<div class="form_query view">
     <h3>Filter display</h3>
     <form method='get' action='archive.php'>
     <input type='hidden' name='id' value='<?php echo $id; ?>'>
