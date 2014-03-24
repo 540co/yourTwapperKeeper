@@ -115,7 +115,7 @@ $logged_in = TRUE;
 $month_num = array(1,2,3,4,5,6,7,8,9,10,11,12);
 $month_verbose = array('January','February','March','April','May','June','July','August','September','October','November','December');  
 $day = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
-$year = array('2009','2010','2011','2012','2013');
+$year = array('2009','2010','2011','2012','2013','2014');
 $order_values = array('ascending'=>'a','descending'=>'d');
 $limit_values = array(10,25,50,250,500,1000,10000,100000,1000000,10000000);
 $languageCodes = array(
@@ -496,9 +496,7 @@ echo "</h5>";
             $matches = array();
             preg_match('@(http://([\w-.]+)+(:\d+)?(/([\w/_.]*(\?\S+)?)?)?)@',$row['text'],$matches);
             $text = preg_replace("/#(\w+)/", "<a href=\"http://search.twitter.com/search?q=\\1\" target=\"_blank\">#\\1</a>", $text);
-
             
-            preg_replace('#','<a href="http://search.twitter.com/q=$1">.$1."</a>');
             echo "<b>@".$row['from_user']."</b> ".$text."<br><br>";
             echo "<font style='font-weight:lighter; font-size:8px'><i>".$row['created_at']." - tweet id <a name='tweetid-".$row['id']."'>".$row['id']."</a> - #$tw_count</i></font>";
             echo "<br>";  
