@@ -38,6 +38,7 @@ $permrss = $tk_your_url."rss.php?".htmlentities($_SERVER['QUERY_STRING']);
 $permexcel = $tk_your_url."excel.php?".htmlentities($_SERVER['QUERY_STRING']);
 $permtable = $tk_your_url."table.php?".htmlentities($_SERVER['QUERY_STRING']);
 $permjson = $tk_your_url."apiGetTweets.php?".htmlentities($_SERVER['QUERY_STRING']);
+$permcsvpipe = $tk_your_url."csv_pipe_delimiter.php?".htmlentities($_SERVER['QUERY_STRING']);
 
 // set default limit
 if ($_GET['l'] == '') {$limit = 10;} else {$limit = $_GET['l'];}
@@ -114,7 +115,7 @@ $logged_in = TRUE;
 $month_num = array(1,2,3,4,5,6,7,8,9,10,11,12);
 $month_verbose = array('January','February','March','April','May','June','July','August','September','October','November','December');  
 $day = array(1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31);
-$year = array('2009','2010','2011','2012','2013');
+$year = array('2009','2010','2011','2012','2013','2014');
 $order_values = array('ascending'=>'a','descending'=>'d');
 $limit_values = array(10,25,50,250,500,1000,10000,100000,1000000,10000000);
 $languageCodes = array(
@@ -306,179 +307,345 @@ $languageCodes = array(
 
 
 ?>
-<div style='border-top:1px solid black; border-bottom:1px solid black; text-align:center; margin-left:auto; margin-right:auto; padding:5px; width:1280px'>
-<center>
-<form method='get' action='archive.php'>
-<input type='hidden' name='id' value='<?php echo $id; ?>'>
-<table>
-<tr>
-<td><b>START DATE</b></td><td></td><td></td><td></td><td><b>END DATE</b></td><td></td><td></td><td><b>ORDER</b></td><td><b>VIEW LIMIT</b></td><td><b>FROM USER</b></td><td><b>TWEET TEXT</b></td><td><b>LANGUAGE</b></td>
 
-<td></td>
-</tr>
+<style>
+    .form_query {
+        padding: 30px 0;
+        border-bottom: 1px solid #333;
+    }
+</style>
 
-<tr>
-<td>
-<SELECT NAME="sm">
-<OPTION value=''>
-<?php
-foreach ($month_num as $value) {
-    echo "<OPTION value='$value'";
-    if ($value == $_GET['sm']) {echo " SELECTED";}
-    echo ">".$month_verbose[$value-1];
-}
-?>
-</SELECT>                                                  
-</td>
+<div class="form_query download">
+    <h3>Download CSV with custom query</h3>
+    <form method='get' action='csv_pipe_delimiter.php'>
+        <input type='hidden' name='id' value='<?php echo $id; ?>'>
+        <table>
+        <tr>
+        <td><b>START DATE</b></td><td></td><td></td><td></td><td><b>END DATE</b></td><td></td><td></td><td><b>ORDER</b></td><td><b>VIEW LIMIT</b></td><td><b>FROM USER</b></td><td><b>TWEET TEXT</b></td><td><b>LANGUAGE</b></td>
 
-<td>
-<SELECT NAME="sd">
-<OPTION value=''>
-<?php
-foreach ($day as $value) {
-    echo "<OPTION";
-    if ($value == $_GET['sd']) {echo " SELECTED";}
-    echo ">$value";
-}
-?>
+        <td></td>
+        </tr>
 
-</SELECT>
-</td>
+        <tr>
+        <td>
+        <SELECT NAME="sm">
+        <OPTION value=''>
+        <?php
+        foreach ($month_num as $value) {
+            echo "<OPTION value='$value'";
+            if ($value == $_GET['sm']) {echo " SELECTED";}
+            echo ">".$month_verbose[$value-1];
+        }
+        ?>
+        </SELECT>                                                  
+        </td>
 
-<td>                                                                                                                
-<SELECT NAME="sy">
-<OPTION value=''>
-<?php
-foreach ($year as $value) {
-    echo "<OPTION";
-    if ($value == $_GET['sy']) {echo " SELECTED";}
-    echo ">$value";
-}
-?>
-</SELECT>
-</td>
+        <td>
+        <SELECT NAME="sd">
+        <OPTION value=''>
+        <?php
+        foreach ($day as $value) {
+            echo "<OPTION";
+            if ($value == $_GET['sd']) {echo " SELECTED";}
+            echo ">$value";
+        }
+        ?>
 
-<td></td>
+        </SELECT>
+        </td>
 
-<td>
-<SELECT NAME="em">
-<OPTION value=''>
-<?php
-foreach ($month_num as $value) {
-    echo "<OPTION value='$value'";
-    if ($value == $_GET['em']) {echo " SELECTED";}
-    echo ">".$month_verbose[$value-1];
-}
-?>
-</SELECT>
-</td>
+        <td>                                                                                                                
+        <SELECT NAME="sy">
+        <OPTION value=''>
+        <?php
+        foreach ($year as $value) {
+            echo "<OPTION";
+            if ($value == $_GET['sy']) {echo " SELECTED";}
+            echo ">$value";
+        }
+        ?>
+        </SELECT>
+        </td>
 
-<td>
-<SELECT NAME="ed">
-<OPTION value=''>
-<?php
-foreach ($day as $value) {
-    echo "<OPTION";
-    if ($value == $_GET['ed']) {echo " SELECTED";}
-    echo ">$value";
-}
-?>
+        <td></td>
 
-</SELECT>
-</td>
+        <td>
+        <SELECT NAME="em">
+        <OPTION value=''>
+        <?php
+        foreach ($month_num as $value) {
+            echo "<OPTION value='$value'";
+            if ($value == $_GET['em']) {echo " SELECTED";}
+            echo ">".$month_verbose[$value-1];
+        }
+        ?>
+        </SELECT>
+        </td>
 
-<td>
-<SELECT NAME="ey">
-<OPTION value=''>
-<?php
-foreach ($year as $value) {
-    echo "<OPTION";
-    if ($value == $_GET['ey']) {echo " SELECTED";}
-    echo ">$value";
-}
-?>
+        <td>
+        <SELECT NAME="ed">
+        <OPTION value=''>
+        <?php
+        foreach ($day as $value) {
+            echo "<OPTION";
+            if ($value == $_GET['ed']) {echo " SELECTED";}
+            echo ">$value";
+        }
+        ?>
 
-</SELECT>
-</td>
+        </SELECT>
+        </td>
 
-<td>
-<SELECT NAME="o">
-<OPTION value=''>
-<?php
-foreach ($order_values as $key=>$value) {
-    echo "<OPTION value='$value'";
-    if ($value == $_GET['o']) {echo " SELECTED";}
-    echo ">$key";
-}
-?>
-</SELECT>
-</td>
+        <td>
+        <SELECT NAME="ey">
+        <OPTION value=''>
+        <?php
+        foreach ($year as $value) {
+            echo "<OPTION";
+            if ($value == $_GET['ey']) {echo " SELECTED";}
+            echo ">$value";
+        }
+        ?>
 
-<td>
-<SELECT NAME="l">
-<OPTION value=''>
-<?php
-foreach ($limit_values as $value) {
-    echo "<OPTION value='$value'";
-    if ($value == $limit) {echo " SELECTED";}
-    echo ">$value";
-}
-?>
-</SELECT>
-</td>
+        </SELECT>
+        </td>
 
-<?php
-echo "<td>";
-echo "<input name='from_user' value ='".$_GET['from_user']."'/>";
-echo "</td>";
-?>
+        <td>
+        <SELECT NAME="o">
+        <OPTION value=''>
+        <?php
+        foreach ($order_values as $key=>$value) {
+            echo "<OPTION value='$value'";
+            if ($value == $_GET['o']) {echo " SELECTED";}
+            echo ">$key";
+        }
+        ?>
+        </SELECT>
+        </td>
 
-<td>
-<input name='text' value='<?php echo $_GET['text']; ?>'/>
-</td>
+        <td>
+        <SELECT NAME="l">
+        <OPTION value=''>
+        <?php
+        foreach ($limit_values as $value) {
+            echo "<OPTION value='$value'";
+            if ($value == $limit) {echo " SELECTED";}
+            echo ">$value";
+        }
+        ?>
+        </SELECT>
+        </td>
 
-<td>
-<SELECT NAME='lang'>
-<OPTION value=''>
-<?php
-foreach ($languageCodes as $key=>$value) {
-    echo "<OPTION value='$key'";
-    if ($key == $_GET['lang']) {echo " SELECTED";}
-    echo ">$value ($key)";
-}
-?>
-</SELECT>
-</td>
+        <?php
+        echo "<td>";
+        echo "<input name='from_user' value ='".$_GET['from_user']."'/>";
+        echo "</td>";
+        ?>
 
-<td>
-<input type="checkbox" name="nort" value="1"
-<?php if ($_GET['nort'] == 1) {echo " checked";}?>
-/>remove RTs
-</td>
+        <td>
+        <input name='text' value='<?php echo $_GET['text']; ?>'/>
+        </td>
 
-</tr>
-</table>
+        <td>
+        <SELECT NAME='lang'>
+        <OPTION value=''>
+        <?php
+        foreach ($languageCodes as $key=>$value) {
+            echo "<OPTION value='$key'";
+            if ($key == $_GET['lang']) {echo " SELECTED";}
+            echo ">$value ($key)";
+        }
+        ?>
+        </SELECT>
+        </td>
 
-<br><input type='submit' value='query'/>  
+        <td>
+        <input type="checkbox" name="nort" value="1"
+        <?php if ($_GET['nort'] == 1) {echo " checked";}?>
+        />remove RTs
+        </td>
 
-</form>
-<br><br>
-<?php 
-          
-echo "HTML Permalink = <a href='$permurl'>$permurl</a><br>";
-echo "RSS Permalink = <a href='$permrss'>$permrss</a><br>";
-echo "Excel Permalink = <a href='$permexcel'>$permexcel</a><br>";
-echo "Simple Table Permalink = <a href='$permtable'>$permtable</a><br>";
-echo "JSON API = <a href='$permjson'>$permjson</a>";
-echo "</h5>";
-?>
-</center>
+        </tr>
+        </table>
+
+        <br><input type='submit' value='download'/>  
+
+    </form>
 </div>
 
 
 
+<div class="form_query view">
+    <h3>Filter display</h3>
+    <form method='get' action='archive.php'>
+    <input type='hidden' name='id' value='<?php echo $id; ?>'>
+    <table>
+    <tr>
+    <td><b>START DATE</b></td><td></td><td></td><td></td><td><b>END DATE</b></td><td></td><td></td><td><b>ORDER</b></td><td><b>VIEW LIMIT</b></td><td><b>FROM USER</b></td><td><b>TWEET TEXT</b></td><td><b>LANGUAGE</b></td>
+
+    <td></td>
+    </tr>
+
+    <tr>
+    <td>
+    <SELECT NAME="sm">
+    <OPTION value=''>
+    <?php
+    foreach ($month_num as $value) {
+        echo "<OPTION value='$value'";
+        if ($value == $_GET['sm']) {echo " SELECTED";}
+        echo ">".$month_verbose[$value-1];
+    }
+    ?>
+    </SELECT>                                                  
+    </td>
+
+    <td>
+    <SELECT NAME="sd">
+    <OPTION value=''>
+    <?php
+    foreach ($day as $value) {
+        echo "<OPTION";
+        if ($value == $_GET['sd']) {echo " SELECTED";}
+        echo ">$value";
+    }
+    ?>
+
+    </SELECT>
+    </td>
+
+    <td>                                                                                                                
+    <SELECT NAME="sy">
+    <OPTION value=''>
+    <?php
+    foreach ($year as $value) {
+        echo "<OPTION";
+        if ($value == $_GET['sy']) {echo " SELECTED";}
+        echo ">$value";
+    }
+    ?>
+    </SELECT>
+    </td>
+
+    <td></td>
+
+    <td>
+    <SELECT NAME="em">
+    <OPTION value=''>
+    <?php
+    foreach ($month_num as $value) {
+        echo "<OPTION value='$value'";
+        if ($value == $_GET['em']) {echo " SELECTED";}
+        echo ">".$month_verbose[$value-1];
+    }
+    ?>
+    </SELECT>
+    </td>
+
+    <td>
+    <SELECT NAME="ed">
+    <OPTION value=''>
+    <?php
+    foreach ($day as $value) {
+        echo "<OPTION";
+        if ($value == $_GET['ed']) {echo " SELECTED";}
+        echo ">$value";
+    }
+    ?>
+
+    </SELECT>
+    </td>
+
+    <td>
+    <SELECT NAME="ey">
+    <OPTION value=''>
+    <?php
+    foreach ($year as $value) {
+        echo "<OPTION";
+        if ($value == $_GET['ey']) {echo " SELECTED";}
+        echo ">$value";
+    }
+    ?>
+
+    </SELECT>
+    </td>
+
+    <td>
+    <SELECT NAME="o">
+    <OPTION value=''>
+    <?php
+    foreach ($order_values as $key=>$value) {
+        echo "<OPTION value='$value'";
+        if ($value == $_GET['o']) {echo " SELECTED";}
+        echo ">$key";
+    }
+    ?>
+    </SELECT>
+    </td>
+
+    <td>
+    <SELECT NAME="l">
+    <OPTION value=''>
+    <?php
+    foreach ($limit_values as $value) {
+        echo "<OPTION value='$value'";
+        if ($value == $limit) {echo " SELECTED";}
+        echo ">$value";
+    }
+    ?>
+    </SELECT>
+    </td>
+
+    <?php
+    echo "<td>";
+    echo "<input name='from_user' value ='".$_GET['from_user']."'/>";
+    echo "</td>";
+    ?>
+
+    <td>
+    <input name='text' value='<?php echo $_GET['text']; ?>'/>
+    </td>
+
+    <td>
+    <SELECT NAME='lang'>
+    <OPTION value=''>
+    <?php
+    foreach ($languageCodes as $key=>$value) {
+        echo "<OPTION value='$key'";
+        if ($key == $_GET['lang']) {echo " SELECTED";}
+        echo ">$value ($key)";
+    }
+    ?>
+    </SELECT>
+    </td>
+
+    <td>
+    <input type="checkbox" name="nort" value="1"
+    <?php if ($_GET['nort'] == 1) {echo " checked";}?>
+    />remove RTs
+    </td>
+
+    </tr>
+    </table>
+
+    <br><input type='submit' value='query'/>  
+
+    </form>
 
 
+    <br><br>
+    <?php 
+              
+    echo "HTML Permalink = <a href='$permurl'>$permurl</a><br>";
+    echo "RSS Permalink = <a href='$permrss'>$permrss</a><br>";
+    echo "Excel Permalink = <a href='$permexcel'>$permexcel</a><br>";
+    echo "Simple Table Permalink = <a href='$permtable'>$permtable</a><br>";
+    echo "JSON API = <a href='$permjson'>$permjson</a><br>";
+    echo "CSV PIPE DELIMITER = <a href='$permcsvpipe'>$permcsvpipe</a>";
+    echo "</h5>";
+    ?>
+
+</div>
 
 <div style='text-align:left; margin-left:auto; margin-right:auto; width:1024px; padding-top:15px; padding-bottom:15px'>
 
@@ -495,8 +662,6 @@ echo "</h5>";
             preg_match('@(http://([\w-.]+)+(:\d+)?(/([\w/_.]*(\?\S+)?)?)?)@',$row['text'],$matches);
             $text = preg_replace("/#(\w+)/", "<a href=\"http://search.twitter.com/search?q=\\1\" target=\"_blank\">#\\1</a>", $text);
 
-            
-            preg_replace('#','<a href="http://search.twitter.com/q=$1">.$1."</a>');
             echo "<b>@".$row['from_user']."</b> ".$text."<br><br>";
             echo "<font style='font-weight:lighter; font-size:8px'><i>".$row['created_at']." - tweet id <a name='tweetid-".$row['id']."'>".$row['id']."</a> - #$tw_count</i></font>";
             echo "<br>";  
